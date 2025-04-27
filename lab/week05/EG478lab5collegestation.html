@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>evert guzman's first web map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- leaflet css -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+  
+  <style>
+    html, body, #map { height: 100%; margin: 0; padding: 0; }
+  </style>
+</head>
+<body>
+
+<!-- map div -->
+<div id="map"></div>
+
+<!-- leaflet js -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+<script>
+  // make map
+  var map = L.map('map').fitWorld();
+
+  // add tiles
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+
+  // try to locate user
+  map.locate({setView: true, maxZoom: 16});
+
+  // if location found
+  function onLocationFound(e) {
+    var radius = e.accuracy / 2;
+    L.marker(e.latlng).addTo(map)
+      .bindPopup("you are within " + radius + " meters").openPopup();
+    L.circle(e.latlng, radius).addTo(map);
+  }
+
+  // if location fails
+  function onLocationError(e) {
+    alert(e.message);
+    map.setView([30.6084, -96.3402], 16); // center on kyle field
+  }
+
+  map.on('locationfound', onLocationFound);
+  map.on('locationerror', onLocationError);
+
+  // circle for kyle field
+  var kyleCircle = L.circle([30.6084, -96.3402], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 300
+  }).addTo(map);
+  kyleCircle.bindPopup("kyle field");
+
+  // custom icon for o&m
+  var omIcon = L.icon({
+    iconUrl: 'o&mbuilding.jpeg',
+    iconSize: [32, 32]
+  });
+  L.marker([30.6179, -96.3386], {icon: omIcon}).addTo(map)
+    .bindPopup("o&m building");
+
+  // custom icon for academic building
+  var academicIcon = L.icon({
+    iconUrl: 'academicbuilding.jpeg',
+    iconSize: [32, 32]
+  });
+  L.marker([30.6159, -96.3413], {icon: academicIcon}).addTo(map)
+    .bindPopup("academic building");
+
+  // show lat/lon on click
+  map.on('click', function(e) {
+    L.popup()
+      .setLatLng(e.latlng)
+      .setContent("clicked at " + e.latlng.toString())
+      .openOn(map);
+  });
+</script>
+
+</body>
+</html>
