@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GeoJSON Tutorial-EG</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css"
+    crossorigin=""/>
+    <style>
+        #mapid { height: 600px; width: 800px; }
+    </style>
+</head>
+<body>
+    <div id="mapid"></div>
+
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" crossorigin=""></script>
+
+    <script>
+        var map = L.map('mapid').setView([39.74739, -106], 4);
+
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; OpenStreetMap contributors, Imagery © Mapbox',
+            maxZoom: 18,
+            id: 'mapbox.streets',
+            accessToken: 'pk.eyJ1IjoiZXhhbXBsZXVzZXIiLCJhIjoiY2t2czFjZ3dxMGd3cjJ2cGxyNjR2bWl2biJ9.jOiZqO9sb9M3uD9PtYKGrg'
+        }).addTo(map);
+
+        var myPoint = {
+            "type": "Feature",
+            "properties": {
+                "name": "Coors Field",
+                "amenity": "Baseball Stadium",
+                "popupContent": "This is where the Rockies play!"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [-104.99404, 39.75621]
+            }
+        };
+
+        var myLines = [{
+            "type": "LineString",
+            "coordinates": [[-100, 40], [-105, 45], [-110, 55]]
+        }];
+
+        var myPolys = [{
+            "type": "Feature",
+            "properties": {"party": "Republican"},
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [[
+                    [-104.05, 48.99],
+                    [-97.22, 48.98],
+                    [-96.58, 45.94],
+                    [-104.03, 45.94],
+                    [-104.05, 48.99]
+                ]]
+            }
+        }];
+
+        L.geoJSON(myPoint).addTo(map);
+        L.geoJSON(myLines).addTo(map);
+        L.geoJSON(myPolys).addTo(map);
+    </script>
+</body>
+</html>
