@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Evert Guzman Lab 8 TAMU Map</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.6/esri/css/main.css">
+    <script src="https://js.arcgis.com/4.6/"></script>
+    <style>
+        body { margin: 0; padding: 0; }
+        #viewDiv { position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+    </style>
+</head>
+<body>
+
+<div id="viewDiv"></div>
+
+<script>
+require([
+  "esri/Map",
+  "esri/views/MapView",
+  "esri/layers/FeatureLayer",
+  "dojo/domReady!"
+], function(Map, MapView, FeatureLayer) {
+
+  var map = new Map({
+    basemap: "streets"
+  });
+
+  var view = new MapView({
+    container: "viewDiv",
+    map: map,
+    center: [-96.3395, 30.6175], // center on TAMU campus
+    zoom: 17
+  });
+
+  var featureLayer = new FeatureLayer({
+    url: "https://services1.arcgis.com/qr14biwnHA6Vis6l/arcgis/rest/services/RevBurialSite/FeatureServer",
+    popupTemplate: {
+      title: "{Name}",
+      actions: [{
+        id: "find"
+      }],
+      content: [{
+        type: "fields",
+        fieldInfos: [
+          { fieldName: "Name" },
+          { fieldName: "Abbr" }
+        ]
+      }]
+    }
+  });
+
+  map.add(featureLayer);
+});
+</script>
+
+</body>
+</html>
